@@ -195,6 +195,7 @@ app.delete('/api/users/:id', authMiddleware, async (req, res) => {
   res.json({ message: 'User deleted' });
 });
 
+
 initDb()
   .then(() => {
     app.listen(PORT, () => {
