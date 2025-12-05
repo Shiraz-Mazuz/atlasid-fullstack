@@ -22,6 +22,7 @@ async function initDb() {
       table.timestamps(true, true); 
     });
 
+    
     console.log('Seeding admin user...');
     const hash = await bcrypt.hash('admin123', 10);
     await db('users').insert({
