@@ -1,4 +1,4 @@
-// db.js
+
 const knex = require('knex');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
@@ -8,7 +8,6 @@ const db = knex({
   connection: process.env.DATABASE_URL,
 });
 
-// פונקציה שיוצרת טבלת users אם לא קיימת, וזורעת admin
 async function initDb() {
   const exists = await db.schema.hasTable('users');
   if (!exists) {
@@ -19,7 +18,7 @@ async function initDb() {
       table.string('email').notNullable().unique();
       table.string('password_hash').notNullable();
       table.enu('role', ['admin', 'user']).notNullable().defaultTo('user');
-      table.timestamps(true, true); // created_at, updated_at
+      table.timestamps(true, true); 
     });
 
     console.log('Seeding admin user...');

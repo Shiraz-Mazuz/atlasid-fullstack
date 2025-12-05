@@ -1,4 +1,4 @@
-// index.js
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -12,13 +12,13 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Middleware לבדיקת JWT
+
 function authMiddleware(req, res, next) {
   const header = req.headers.authorization;
   if (!header || !header.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-  const token = header.slice(7); // מוריד "Bearer "
+  const token = header.slice(7); 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.user = payload;
@@ -28,14 +28,12 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// בריאות בסיסית
+
 app.get('/api/health', (req, res) => {
   res.json({ ok: true });
 });
 
-// ========== AUTH ==========
 
-// register - משתמש רגיל
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -65,7 +63,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// login
+
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -98,9 +96,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ========== USERS CRUD ==========
 
-// GET /api/users - admin only
 app.get('/api/users', authMiddleware, async (req, res) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Forbidden' });
@@ -110,7 +106,7 @@ app.get('/api/users', authMiddleware, async (req, res) => {
   res.json(users);
 });
 
-// GET /api/users/:id - admin או self
+
 app.get('/api/users/:id', authMiddleware, async (req, res) => {
   const id = Number(req.params.id);
   if (Number.isNaN(id)) return res.status(400).json({ message: 'Invalid id' });
@@ -129,7 +125,7 @@ app.get('/api/users/:id', authMiddleware, async (req, res) => {
   res.json(user);
 });
 
-// POST /api/users - admin only
+
 app.post('/api/users', authMiddleware, async (req, res) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Forbidden' });
@@ -159,7 +155,7 @@ app.post('/api/users', authMiddleware, async (req, res) => {
   res.status(201).json(user);
 });
 
-// PUT /api/users/:id
+
 app.put('/api/users/:id', authMiddleware, async (req, res) => {
   const id = Number(req.params.id);
   if (Number.isNaN(id)) return res.status(400).json({ message: 'Invalid id' });
@@ -184,7 +180,7 @@ app.put('/api/users/:id', authMiddleware, async (req, res) => {
   res.json(user);
 });
 
-// DELETE /api/users/:id - admin only
+
 app.delete('/api/users/:id', authMiddleware, async (req, res) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Forbidden' });
@@ -199,7 +195,6 @@ app.delete('/api/users/:id', authMiddleware, async (req, res) => {
   res.json({ message: 'User deleted' });
 });
 
-// מתחילים: דואגים שהדאטאבייס מוכן, ואז מריצים שרת
 initDb()
   .then(() => {
     app.listen(PORT, () => {
