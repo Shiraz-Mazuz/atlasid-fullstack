@@ -8,6 +8,7 @@ const db = knex({
   connection: process.env.DATABASE_URL,
 });
 
+
 async function initDb() {
   const exists = await db.schema.hasTable('users');
   if (!exists) {
